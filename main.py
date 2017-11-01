@@ -1,7 +1,5 @@
-import time
-import sys, getopt
-import datetime
 from poloniex import Poloniex
+
 polo = Poloniex()
 
 polo.key = 'GHX32OJP-DGCFJKCS-LACQJUJ5-25D2KK0R'
@@ -11,6 +9,7 @@ balance = polo.returnBalances()
 # print("I have %s BTC!" % balance['BTC'])
 volume = polo.return24hVolume()
 ticker = polo.returnTicker()
-print (volume)
-print (ticker)
-print (ticker)
+orders = polo.returnOpenOrders("all")
+print(volume)
+print(ticker)
+print(orders)
