@@ -9,9 +9,11 @@ class PoloApi(object):
     MIN_AMOUNT = 0.0001
     MIN_ORDER = 0.0002
     FEE = 0.25
+    MIN_PROFIT = 1
 
     def buy(self, pair, rate, amount):
-        polo.buy(pair, rate, amount)
+        print("I will buy the " + str(round(amount,8)) + " coins from " + str(pair) + " pair for " + str(rate) + " BTC")
+        # polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):
         polo.sell(pair, rate, amount)

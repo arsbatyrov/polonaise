@@ -11,10 +11,12 @@ class TestInterface(object):
 
     # get info from exchange
 
-    lastBuyPrice = 0.09000000
+    lastBuyPrice = 0.08000000
 
-    profit = strategy.isProfit(pair, lastBuyPrice)
-    print(profit)
+    # profit = strategy.isProfit(pair, lastBuyPrice)
+    # print(profit)
+
+    strategy.tick(pair)
 
     # volume = float(api.volume(api))
     # values = float(api.values(api))
