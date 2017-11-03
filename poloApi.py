@@ -8,6 +8,7 @@ class PoloApi(object):
 
     MIN_AMOUNT = 0.0001
     MIN_ORDER = 0.0002
+    FEE = 0.25
 
     def buy(self, pair, rate, amount):
         polo.buy(pair, rate, amount)
@@ -22,20 +23,20 @@ class PoloApi(object):
         return polo.return24hVolume()
 
     def lastValue(self, pair):
-        allValues = self.values(self)
+        allValues = self.values()
         valueForPair = allValues[pair]["last"]
         return valueForPair
 
-    # Bid is SELL price
+    # Bid is BUY ORDER price (lower than ask)
     def getHighestBid(self, pair):
-        allValues = self.values(self)
+        allValues = self.values()
         bid = allValues[pair]["highestBid"]
         highestBid = round(float(bid) + 0.00000001, 8)
         return highestBid
 
-    # Ask is BUY price
+    # Ask is SELL ORDER price (higher than bid)
     def getLowestAsk(self, pair):
-        allValues = self.values(self)
+        allValues = self.values()
         ask = allValues[pair]["lowestAsk"]
         lowestAsk = round(float(ask) - 0.00000001, 8)
         return lowestAsk
@@ -45,12 +46,12 @@ class PoloApi(object):
         return allBalances
 
     def getBTCBalance(self):
-        allBalances = self.getAllBalances(self)
+        allBalances = self.getAllBalances()
         btcBalance = allBalances["BTC"]
         return btcBalance
 
     def getAltBalance(self):
-        allBalances = self.getAllBalances(self)
+        allBalances = self.getAllBalances()
         altBalance = allBalances["BCH"]
         return altBalance
 
