@@ -1,4 +1,3 @@
-import re
 from poloApi import PoloApi
 api = PoloApi
 
@@ -10,21 +9,25 @@ class TestInterface(object):
 
     # get info from exchange
 
-    volume = api.volume(api)
-    values = api.values(api)
+    lastBuyPrice = 0.09000000
 
-    lastValue = api.lastValue(api, pair)
-    hBid = api.getHighestBid(api, pair)
-    lAsk = api.getLowestAsk(api, pair)
+    volume = float(api.volume(api))
+    values = float(api.values(api))
 
-    balances = api.getAllBalances(api)
-    myBTC = api.getBTCBalance(api)
-    myALT = api.getAltBalance(api)
+    # lastValue = api.lastValue(api, pair)
+    hBid = float(api.getHighestBid(api, pair))
+    lAsk = float(api.getLowestAsk(api, pair))
 
-    print("Highest bid is " + str(hBid))
-    print("Lowest ask is " + str(lAsk))
-    print("My BTC balance is: " + myBTC)
-    print("My BCH balance is: " + myALT)
+    # balances = api.getAllBalances(api)
+    # myBTC = api.getBTCBalance(api)
+    # myALT = api.getAltBalance(api)
+    #
+    # print("Highest bid is " + str(hBid))
+    # print("Lowest ask is " + str(lAsk))
+    # print("My BTC balance is: " + myBTC)
+    # print("My BCH balance is: " + myALT)
+    #
+    # print(volume[pair]["BCH"])
 
     # print(values)
     # print("Last value of " + pair + " pair is " + lastValue)
@@ -35,3 +38,7 @@ class TestInterface(object):
 
     # # test sell
     # api.sell(api, pair, 0.07911000, 0.00399101)
+
+    range = (lAsk - hBid) / hBid * volume[pair]["BCH"]
+    profit = lAsk - lastBuyPrice
+    print(profit)
