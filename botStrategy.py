@@ -16,7 +16,7 @@ class BotStrategy(object):
         self.currentPrice = float(candlestick["weightedAverage"])
         self.prices.append(self.currentPrice)
 
-        self.output.log("Price: "+str(candlestick["weightedAverage"]))
+        self.output.log("Price: " + str(candlestick["weightedAverage"]))
 
         self.evaluatePositions()
 

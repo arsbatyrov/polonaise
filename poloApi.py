@@ -12,11 +12,12 @@ class PoloApi(object):
     MIN_PROFIT = 1
 
     def buy(self, pair, rate, amount):
-        print("I will buy the " + str(round(amount,8)) + " coins from " + str(pair) + " pair for " + str(rate) + " BTC")
+        print("I will buy the " + str(round(amount,8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
         # polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):
-        polo.sell(pair, rate, amount)
+        print("I will sell the " + str(round(amount,8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
+        # polo.sell(pair, rate, amount)
 
     def values(self):
         return polo.returnTicker()
@@ -60,3 +61,13 @@ class PoloApi(object):
     def getChart(self, pair, period, start, end):
         data = polo.returnChartData(pair, period, start, end)
         return data
+
+    def getOpenOrders(self, pair):
+        orders = polo.returnOpenOrders(pair)
+        return orders
+
+    def splitPair(self, pair):
+        splitPair = re.split(r"_", pair,)
+        return splitPair
+
+

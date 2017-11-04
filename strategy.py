@@ -1,21 +1,27 @@
+import time
 from poloApi import PoloApi
+from botLog import BotLog
 api = PoloApi()
+
 
 class Strategy(object):
     def __init__(self):
-        self.prices = []
-        self.trades = []
-        self.currentPrice = ""
-        self.lastBuyPrice = 0.08000000
-        self.lastSellPrice = ""
-        self.amount = ""
-        self.numSimulTrades = 1
+        self.output = BotLog()
+        self.currentPrice = 0
+        self.lastBuyPrice = 0.01
+        self.lastSellPrice = 0.01
+        self.amount = 0
 
-
-    def tick(self, pair):
-        if self.isProfit(pair, self.lastBuyPrice):
-            self.buyAlt(pair, self.currentPrice, self.amount)
-
+    def tick(self, pair, candlestick, wait=10):
+        self.currentPrice = float(candlestick["weightedAverage"])
+        btcBalance = round(float(api.getBTCBalance()), 8)
+        altBalance = round(float(api.getAltBalance()), 8)
+        if altBalance > api.MIN_AMOUNT / api.getHighestBid(pair):
+            if self.isProfit(pair, self.lastSellPrice):
+                self.sellAlt(pair, self.currentPrice, self.amount)
+        elif btcBalance > api.MIN_AMOUNT:
+            self.buyAlt(pair, api.getLowestAsk(pair), api.MIN_AMOUNT / api.getLowestAsk(pair))
+        time.sleep(wait)
 
     def isProfit(self, pair, lastPrice):
         hBid = api.getHighestBid(pair)
@@ -30,31 +36,12 @@ class Strategy(object):
             self.currentPrice = hBid
             self.amount = amount
             return True
-        else:
-            return False
+        return False
 
     def buyAlt(self, pair, price, amount):
         api.buy(pair, price, amount)
+        self.lastBuyPrice = price
 
-    #
-    # def evaluatePositions(self):
-    #     pair = "BTC_BCH"
-    #     volume = api.volume(api)
-    #     hBid = api.getHighestBid(api, pair)
-    #     lAsk = api.getLowestAsk(api, pair)
-    #
-    #     openTrades = []
-    #     for trade in self.trades:
-    #         if trade.status == "OPEN":
-    #             openTrades.append(trade)
-
-        # if(len(openTrades) < self.numSimulTrades):
-                # if(self.currentPrice < )
-
-
-
-
-
-
-
-
+    def sellAlt(self, pair, price, amount):
+        api.sell(pair, price, amount)
+        self.lastSellPrice = price

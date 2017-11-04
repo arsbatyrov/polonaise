@@ -1,22 +1,28 @@
 from poloApi import PoloApi
 from strategy import Strategy
+from botChart import BotChart
 api = PoloApi()
 strategy = Strategy()
+chart = BotChart("poloniex", "BTC_BCH", 300)
 
 class TestInterface(object):
     def __init__(self):
         pass
 
     pair = "BTC_BCH"
+    points = chart.getPoints()
+    print(points)
+
+    # while True:
+    #     strategy.tick(pair)
 
     # get info from exchange
 
-    lastBuyPrice = 0.08000000
-
+    # api.splitPair(pair)
     # profit = strategy.isProfit(pair, lastBuyPrice)
     # print(profit)
 
-    strategy.tick(pair)
+    # strategy.tick(pair)
 
     # volume = float(api.volume(api))
     # values = float(api.values(api))
@@ -26,8 +32,8 @@ class TestInterface(object):
     # lAsk = float(api.getLowestAsk(api, pair))
 
     # balances = api.getAllBalances()
-    myBTC = api.getBTCBalance()
-    myALT = api.getAltBalance()
+    # myBTC = api.getBTCBalance()
+    # myALT = api.getAltBalance()
     #
     # print("Highest bid is " + str(hBid))
     # print("Lowest ask is " + str(lAsk))
