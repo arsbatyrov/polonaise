@@ -8,15 +8,15 @@ class PoloApi(object):
 
     MIN_AMOUNT = 0.0001
     MIN_ORDER = 0.0002
-    FEE = 0.25
+    FEE = 0.0025
     MIN_PROFIT = 1
 
     def buy(self, pair, rate, amount):
-        print("I will buy the " + str(round(amount,8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
+        print("I will buy the " + str(round(amount, 8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
         # polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):
-        print("I will sell the " + str(round(amount,8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
+        print("I will sell the " + str(round(amount, 8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
         # polo.sell(pair, rate, amount)
 
     def values(self):
@@ -66,6 +66,7 @@ class PoloApi(object):
         orders = polo.returnOpenOrders(pair)
         return orders
 
+    # Splits coin pair "BTC_ETH" to "BTC, ETC"
     def splitPair(self, pair):
         splitPair = re.split(r"_", pair,)
         return splitPair

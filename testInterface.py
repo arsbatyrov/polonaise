@@ -10,8 +10,26 @@ class TestInterface(object):
         pass
 
     pair = "BTC_BCH"
+    # values = api.values()
+    # pairs = []
+    # print(values)
+    # for i in range(1, len(values)):
+    #     pairs.append(values[i])
+    #     i += 1
+    # print(pairs)
+
+
+
     points = chart.getPoints()
-    print(points)
+    print(len(points))
+    for i in range(0, len(points)):
+        hBid = float(points[i]["high"])
+        lAsk = float(points[i]["low"])
+        strategy.test_tick(pair, hBid, lAsk, 0)
+        i += 1
+    print(str(strategy.altBalance) + " BCH")
+    print(str(strategy.btcBalance) + " BTC")
+
 
     # while True:
     #     strategy.tick(pair)

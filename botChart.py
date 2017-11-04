@@ -7,8 +7,8 @@ class BotChart(object):
         self.pair = pair
         self.period = period
 
-        self.startTime = 1509575629
-        self.endTime = 1509975629
+        self.startTime = 1400012400
+        self.endTime = 1509685200
 
         self.data = self.conn.returnChartData(self.pair, self.period, self.startTime, self.endTime)
 
