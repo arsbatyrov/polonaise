@@ -2,29 +2,17 @@ import json
 from poloApi import PoloApi
 from strategy import Strategy
 from botChart import BotChart
+from ranking import Ranking
 api = PoloApi()
 strategy = Strategy()
 chart = BotChart("poloniex", "BTC_BCH", 300)
+rank = Ranking()
 
 class TestInterface(object):
     def __init__(self):
-        self.rank = []
+        pass
 
-
-    array = api.values()
-    dump = json.dumps(array)
-    data = json.loads(dump)
-    datakeys = list(data.keys())
-    for i in range(1, len(datakeys)):
-        pair = datakeys[i]
-        pairdata = data.get(pair)
-        lAsk = float(pairdata.get("lowestAsk"))
-        hBid = float(pairdata.get("highestBid"))
-        volume = float(pairdata.get("baseVolume"))
-        rank = ((lAsk - hBid)/hBid)*volume
-        self.rank = rank
-
-        print(pair + " " + str(rank))
+    print(rank.getRankList())
 
 
     # points = chart.getPoints()
@@ -40,8 +28,6 @@ class TestInterface(object):
 
     # while True:
     #     strategy.tick(pair)
-
-    # get info from exchange
 
     # api.splitPair(pair)
     # profit = strategy.isProfit(pair, lastBuyPrice)
