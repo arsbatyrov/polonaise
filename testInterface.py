@@ -1,3 +1,4 @@
+import json
 from poloApi import PoloApi
 from strategy import Strategy
 from botChart import BotChart
@@ -7,28 +8,34 @@ chart = BotChart("poloniex", "BTC_BCH", 300)
 
 class TestInterface(object):
     def __init__(self):
-        pass
+        self.rank = []
 
-    pair = "BTC_BCH"
-    # values = api.values()
-    # pairs = []
-    # print(values)
-    # for i in range(1, len(values)):
-    #     pairs.append(values[i])
+
+    array = api.values()
+    dump = json.dumps(array)
+    data = json.loads(dump)
+    datakeys = list(data.keys())
+    for i in range(1, len(datakeys)):
+        pair = datakeys[i]
+        pairdata = data.get(pair)
+        lAsk = float(pairdata.get("lowestAsk"))
+        hBid = float(pairdata.get("highestBid"))
+        volume = float(pairdata.get("baseVolume"))
+        rank = ((lAsk - hBid)/hBid)*volume
+        self.rank = rank
+
+        print(pair + " " + str(rank))
+
+
+    # points = chart.getPoints()
+    # print(len(points))
+    # for i in range(0, len(points)):
+    #     hBid = float(points[i]["high"])
+    #     lAsk = float(points[i]["low"])
+    #     strategy.test_tick(pair, hBid, lAsk, 0)
     #     i += 1
-    # print(pairs)
-
-
-
-    points = chart.getPoints()
-    print(len(points))
-    for i in range(0, len(points)):
-        hBid = float(points[i]["high"])
-        lAsk = float(points[i]["low"])
-        strategy.test_tick(pair, hBid, lAsk, 0)
-        i += 1
-    print(str(strategy.altBalance) + " BCH")
-    print(str(strategy.btcBalance) + " BTC")
+    # print(str(strategy.altBalance) + " BCH")
+    # print(str(strategy.btcBalance) + " BTC")
 
 
     # while True:
