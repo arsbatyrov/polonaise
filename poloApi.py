@@ -1,6 +1,10 @@
 import re
+from datetime import datetime
+import time
 from poloniex import Poloniex
+from datafiles import DataFiles
 polo = Poloniex()
+file = DataFiles()
 
 class PoloApi(object):
     polo.key = 'GHX32OJP-DGCFJKCS-LACQJUJ5-25D2KK0R'
@@ -12,11 +16,15 @@ class PoloApi(object):
     MIN_PROFIT = 1
 
     def buy(self, pair, rate, amount):
-        print("I will buy the " + str(round(amount, 8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
+        alt = self.splitPair(pair)[1]
+        timestamp = str(datetime.today())
+        print("I will buy the " + str(format(round(amount, 8), ".8f")) + " " + alt + " by the price of " + str(format(rate, ".8f")) + " BTC for 1 " + alt)
+        file.writeToFile(pair, rate, timestamp)
         # polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):
-        print("I will sell the " + str(round(amount, 8)) + " " + self.splitPair(pair)[1] + " for " + str(rate) + " BTC")
+        alt = self.splitPair(pair)[1]
+        print("I will sell the " + str(format(round(amount, 8), ".8f")) + " " + alt + " by the price of " + str(format(rate, ".8f")) + " BTC for 1 " + alt)
         # polo.sell(pair, rate, amount)
 
     def values(self):
@@ -53,9 +61,9 @@ class PoloApi(object):
         btcBalance = allBalances["BTC"]
         return btcBalance
 
-    def getAltBalance(self):
+    def getAltBalance(self, splitPair):
         allBalances = self.getAllBalances()
-        altBalance = allBalances["BCH"]
+        altBalance = allBalances[splitPair[1]]
         return altBalance
 
     def getChart(self, pair, period, start, end):

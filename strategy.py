@@ -41,9 +41,10 @@ class Strategy(object):
         return False
 
     def tick(self, pair, wait=10):
+        splitpair = api.splitPair(pair)
         # get balances on BTC and ALT
         btcBalance = round(float(api.getBTCBalance()), 8)
-        altBalance = round(float(api.getAltBalance()), 8)
+        altBalance = round(float(api.getAltBalance(splitpair)), 8)
         # get minimum bid for this price: 0.0001 BTC * current alt price
         minBid = api.MIN_AMOUNT * api.getHighestBid(pair)
         # if we have enough altcoins to place a minimum bid sell order
