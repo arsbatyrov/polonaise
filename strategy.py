@@ -1,7 +1,9 @@
 import time
 from poloApi import PoloApi
 from botLog import BotLog
+from datafiles import DataFiles
 api = PoloApi()
+data = DataFiles()
 
 class Strategy(object):
     def __init__(self):
@@ -47,6 +49,8 @@ class Strategy(object):
         altBalance = round(float(api.getAltBalance(splitpair)), 8)
         # get minimum bid for this price: 0.0001 BTC * current alt price
         minBid = api.MIN_AMOUNT * api.getHighestBid(pair)
+        # get last price we bough the Alt at
+        print(data.readFromFile(pair))
         # if we have enough altcoins to place a minimum bid sell order
         if altBalance > minBid:
             # if we sell with profit comparing to the previous price

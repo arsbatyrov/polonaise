@@ -1,8 +1,6 @@
-from tempfile import NamedTemporaryFile
 import csv
 import shutil
 filename = 'exchangedata.csv'
-tempfile = NamedTemporaryFile(mode='w', delete=False)
 fields = ['pair', 'datetime', 'price']
 csv.register_dialect('myDialect', delimiter=';', quoting=csv.QUOTE_NONE)
 
