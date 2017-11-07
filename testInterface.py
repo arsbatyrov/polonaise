@@ -3,16 +3,20 @@ from strategy import Strategy
 from botChart import BotChart
 from ranking import Ranking
 from datafiles import DataFiles
+from database import Database
 api = PoloApi()
 strategy = Strategy()
 chart = BotChart("poloniex", "BTC_BCH", 300)
 rank = Ranking()
 file = DataFiles()
+db = Database()
 
 
 class TestInterface(object):
     def __init__(self):
         pass
+
+    # db.test()
 
     trade_pairs = 10
     ranks = rank.getRankList()

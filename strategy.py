@@ -2,8 +2,10 @@ import time
 from poloApi import PoloApi
 from botLog import BotLog
 from datafiles import DataFiles
+from database import Database
 api = PoloApi()
 data = DataFiles()
+db = Database()
 
 class Strategy(object):
     def __init__(self):
@@ -14,10 +16,6 @@ class Strategy(object):
         self.amount = 0
         self.btcBalance = 1.00
         self.altBalance = 0.00
-
-    def rankCoins(self):
-        values = api.values
-        print(values)
 
     def isProfit(self, pair, lastPrice):
         # get highest bit on the pair plus 1 satoshi
@@ -50,11 +48,12 @@ class Strategy(object):
         # get minimum bid for this price: 0.0001 BTC * current alt price
         minBid = api.MIN_AMOUNT * api.getHighestBid(pair)
         # get last price we bough the Alt at
-        print(data.readFromFile(pair))
+        db.writePrice(pair, "150321453", api.getHighestBid(pair))
+        lastPrice = db.getLastPrice(pair)
         # if we have enough altcoins to place a minimum bid sell order
         if altBalance > minBid:
             # if we sell with profit comparing to the previous price
-            if self.isProfit(pair, self.lastSellPrice):
+            if self.isProfit(pair, lastPrice):
                 # sell the coin for price and amount stated in isProfit function
                 self.sellAlt(pair, self.currentPrice, self.amount)
         # we don't have enough alt, so we are going to buy it, if we have enough BTC
@@ -65,34 +64,6 @@ class Strategy(object):
             self.buyAlt(pair, api.getLowestAsk(pair), minAmount)
         time.sleep(wait)
 
-    def test_profit(self, lastPrice, hBid):
-        amount = api.MIN_AMOUNT / hBid
-        coinfee = amount - amount * api.FEE
-        btcfee = round(coinfee * hBid, 8)
-        profit = round(hBid - lastPrice - btcfee, 8)
-        profitPercent = int(round(profit / lastPrice, 2) * 100)
-        self.output.log("Highest bid is " + str(hBid) +
-                        "\nLast price was " + str(lastPrice) +
-                        "\nFee is " + str(btcfee) + " BTC")
-        self.output.log("Total profit is " + str(profit) + ", or " + str(profitPercent) + "%.")
-        if profitPercent > api.MIN_PROFIT:
-            self.currentPrice = hBid
-            self.amount = amount
-            return True
-        return False
-
-    def test_tick(self, pair, hBid, lAsk, wait=10):
-        if self.altBalance > api.MIN_AMOUNT / hBid:
-            if self.test_profit(self.lastSellPrice, hBid):
-                self.sellAlt(pair, self.currentPrice, self.amount)
-                self.altBalance -= self.amount
-                self.btcBalance += self.currentPrice * self.amount
-        elif self.btcBalance > api.MIN_AMOUNT:
-            self.buyAlt(pair, lAsk, api.MIN_AMOUNT / lAsk)
-            self.btcBalance -= api.MIN_AMOUNT
-            self.altBalance += api.MIN_AMOUNT / lAsk
-        time.sleep(wait)
-
     def buyAlt(self, pair, price, amount):
         api.buy(pair, price, amount)
         self.lastBuyPrice = price
@@ -100,3 +71,32 @@ class Strategy(object):
     def sellAlt(self, pair, price, amount):
         api.sell(pair, price, amount)
         self.lastSellPrice = price
+
+    # def test_profit(self, lastPrice, hBid):
+    #     amount = api.MIN_AMOUNT / hBid
+    #     coinfee = amount - amount * api.FEE
+    #     btcfee = round(coinfee * hBid, 8)
+    #     profit = round(hBid - lastPrice - btcfee, 8)
+    #     profitPercent = int(round(profit / lastPrice, 2) * 100)
+    #     self.output.log("Highest bid is " + str(hBid) +
+    #                     "\nLast price was " + str(lastPrice) +
+    #                     "\nFee is " + str(btcfee) + " BTC")
+    #     self.output.log("Total profit is " + str(profit) + ", or " + str(profitPercent) + "%.")
+    #     if profitPercent > api.MIN_PROFIT:
+    #         self.currentPrice = hBid
+    #         self.amount = amount
+    #         return True
+    #     return False
+    #
+    # def test_tick(self, pair, hBid, lAsk, wait=10):
+    #     if self.altBalance > api.MIN_AMOUNT / hBid:
+    #         if self.test_profit(self.lastSellPrice, hBid):
+    #             self.sellAlt(pair, self.currentPrice, self.amount)
+    #             self.altBalance -= self.amount
+    #             self.btcBalance += self.currentPrice * self.amount
+    #     elif self.btcBalance > api.MIN_AMOUNT:
+    #         self.buyAlt(pair, lAsk, api.MIN_AMOUNT / lAsk)
+    #         self.btcBalance -= api.MIN_AMOUNT
+    #         self.altBalance += api.MIN_AMOUNT / lAsk
+    #     time.sleep(wait)
+
