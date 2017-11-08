@@ -91,7 +91,12 @@ class PoloApi(object):
 
     def closeOldOrders(self):
         data = self.getOrders()
+        price = 0
+        # test data
+        data = "{'BTC_BTM': [], 'BTC_SYS': [{'orderNumber':'120466','type':'sell','rate':'0.025','amount':'100','total':'2.5'},{'orderNumber':'120467','type':'sell','rate':'0.04','amount':'100','total':'4'}], 'USDT_XMR': []}"
         print(data)
+        ordernumber=0
+        polo.moveOrder(ordernumber,price)
 
 
 
