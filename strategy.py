@@ -17,27 +17,24 @@ class Strategy(object):
         self.altBalance = 0.00
 
     def isProfit(self, pair, lastPrice):
-        # get highest bid on the pair plus 1 satoshi
-        hBid = float(api.getHighestBid(pair))
+        # get highest bid on the pair minus 1 satoshi
+        lAsk = float(api.getLowestAsk(pair))
         # get minimum alt amount to buy for 0.0001 BTC
-        amount = api.MIN_AMOUNT * hBid
+        amount = api.MIN_AMOUNT * lAsk
         # calculate fee in ALT: amount to buy - 0.25% from it
         coinfee = amount - amount * api.FEE
         # convert fee from ALT to BTC: fee * alt price in BTC
-        btcfee = round(coinfee * hBid, 8)
-        # calculate profit: current price - price we bought it - fee, rounded
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # CHECK IF ASK IS THE RIGHT PRICE, NOT BID
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        profit = round(hBid - lastPrice - btcfee, 8)
+        btcfee = round(coinfee * lAsk, 8)
+        # calculate profit: current price (my best price, lAsk - 1 satoshi) - price we bought it - fee, rounded
+        profit = round(lAsk - lastPrice - btcfee, 8)
         # calculate profit percent: profit / price we bought it, multiplied by 100 to get percents
         profitPercent = int(round(profit / lastPrice, 2) * 100)
-        self.output.log("Highest bid is " + str(hBid) +
+        self.output.log("My lowest ask is " + str(lAsk) +
                         "\nLast price was " + str(lastPrice) +
                         "\nFee is " + str(btcfee) + " BTC")
         self.output.log("Total profit is " + str(profit) + ", or " + str(profitPercent) + "%.")
         if profitPercent > api.MIN_PROFIT:
-            self.currentPrice = hBid
+            self.currentPrice = lAsk
             self.amount = amount
             return True
         return False

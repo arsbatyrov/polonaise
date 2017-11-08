@@ -1,4 +1,5 @@
 import re
+import json
 from datetime import datetime
 from poloniex import Poloniex
 from datafiles import DataFiles
@@ -81,5 +82,16 @@ class PoloApi(object):
     def splitPair(self, pair):
         splitPair = re.split(r"_", pair,)
         return splitPair
+
+    def getOrders(self):
+        array = polo.returnOpenOrders('all')
+        dump = json.dumps(array)
+        data = json.loads(dump)
+        return data
+
+    def closeOldOrders(self):
+        data = self.getOrders()
+        print(data)
+
 
 
