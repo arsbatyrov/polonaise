@@ -13,7 +13,7 @@ class Database(object):
 
     def getLastPrice(self, pair):
         db.execute("SELECT PRICE FROM lastPrice WHERE PAIR = ?", (pair,))
-        results = db.fetchall()
+        results = db.fetchone()
         if results is None:
             results = 0.01
         return results

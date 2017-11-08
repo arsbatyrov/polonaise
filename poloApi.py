@@ -20,6 +20,7 @@ class PoloApi(object):
         alt = self.splitPair(pair)[1]
         timestamp = str(datetime.today())
         print("I will buy the " + str(format(round(amount, 8), ".8f")) + " " + alt + " by the price of " + str(format(rate, ".8f")) + " BTC for 1 " + alt)
+        db.writePrice(pair, timestamp, rate)
         # polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):

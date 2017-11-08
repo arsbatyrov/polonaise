@@ -1,6 +1,5 @@
 import time
 from poloApi import PoloApi
-from botLog import BotLog
 from datafiles import DataFiles
 from database import Database
 api = PoloApi()
@@ -9,7 +8,6 @@ db = Database()
 
 class Strategy(object):
     def __init__(self):
-        self.output = BotLog()
         self.currentPrice = 0
         self.lastBuyPrice = 0.01
         self.lastSellPrice = 0.01
@@ -18,8 +16,9 @@ class Strategy(object):
         self.altBalance = 0.00
 
     def isProfit(self, pair, lastPrice):
+        print(lastPrice)
         # get highest bit on the pair plus 1 satoshi
-        hBid = api.getHighestBid(pair)
+        hBid = float(api.getHighestBid(pair))
         # get minimum alt amount to buy for 0.0001 BTC
         amount = api.MIN_AMOUNT * hBid
         # calculate fee in ALT: amount to buy - 0.25% from it
@@ -27,7 +26,7 @@ class Strategy(object):
         # convert fee from ALT to BTC: fee * alt price in BTC
         btcfee = round(coinfee * hBid, 8)
         # calculate profit: current price - price we bought it - fee, rounded
-        profit = round(hBid - lastPrice - btcfee, 8)
+        profit = round(hBid - float(lastPrice) - btcfee, 8)
         # calculate profit percent: profit / price we bought it, multiplied by 100 to get percents
         profitPercent = int(round(profit / lastPrice, 2) * 100)
         self.output.log("Highest bid is " + str(hBid) +
@@ -48,8 +47,8 @@ class Strategy(object):
         # get minimum bid for this price: 0.0001 BTC * current alt price
         minBid = api.MIN_AMOUNT * api.getHighestBid(pair)
         # get last price we bough the Alt at
-        db.writePrice(pair, "150321453", api.getHighestBid(pair))
         lastPrice = db.getLastPrice(pair)
+        print(lastPrice)
         # if we have enough altcoins to place a minimum bid sell order
         if altBalance > minBid:
             # if we sell with profit comparing to the previous price
