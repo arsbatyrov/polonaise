@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 conn = sqlite3.connect('files/storage.db')
 db = conn.cursor()
 
@@ -21,11 +22,11 @@ class Database(object):
         return results
 
     def getLastTime(self, pair):
-        db.execute("SELECT TIME FROM lastPrice WHERE PAIR = ?", (pair,))
+        db.execute("SELECT DATE FROM lastPrice WHERE PAIR = ?", (pair,))
         value = db.fetchone()
         if value is None:
             results = 0
         else:
-            results = value[0]
+            results = datetime.strptime(value[0],'%Y-%m-%d %H:%M:%S.%f')
         return results
 

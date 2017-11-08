@@ -75,7 +75,8 @@ class Strategy(object):
         api.sell(pair, price, amount)
 
     def isTooLong(self, pair):
-        lastTime = datetime(db.getLastTime(pair))
+        lastTime = db.getLastTime(pair)
+        print(lastTime)
         timestamp = datetime.today()
         loss_time = api.LOSS_TIME * 86400.0
         if timestamp - lastTime > loss_time:

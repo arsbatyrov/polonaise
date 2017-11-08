@@ -19,8 +19,7 @@ class TestInterface(object):
     # db.test()
 
     trade_pairs = 10
-    ranks = rank.getRankList()
-    pairs = list(ranks.keys())
+    pairs = rank.getRankedPairsList()
     for i in range(0, trade_pairs):
         pair = pairs[i]
         strategy.tick(pair, 0)

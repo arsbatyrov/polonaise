@@ -1,4 +1,5 @@
 import json
+import operator
 from poloApi import PoloApi
 api = PoloApi()
 
@@ -16,7 +17,7 @@ class Ranking(object):
         data = json.loads(dump)
         return data
 
-    def getRankList(self):
+    def getRankedPairsList(self):
         # get values to variable
         data = self.getData()
         # make a list of coins for further usage
@@ -38,11 +39,8 @@ class Ranking(object):
                 rank = 0
             # append a value to dictionary
             self.ranking[pair] = rank
-        # declare a sorted dict for export
-        sortedRank = {}
-        # get pair:rank dictionary sorted by rank
-        for w in sorted(self.ranking, key=self.ranking.get, reverse=True):
-            sortedRank[w] = self.ranking[w]
-        return sortedRank
-
-
+        # get pair:rank list of tuples sorted by rank
+        sortedRank = sorted(self.ranking.items(), key=operator.itemgetter(1), reverse=True)
+        # get only sorted pairs from list
+        sortedPairs = [str(i[0]) for i in sortedRank]
+        return sortedPairs
