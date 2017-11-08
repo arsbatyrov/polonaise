@@ -15,6 +15,8 @@ class PoloApi(object):
     MIN_ORDER = 0.0002
     FEE = 0.0025
     MIN_PROFIT = 1
+    MIN_VALUE = 0.000001
+    LOSS_TIME = 14
 
     def buy(self, pair, rate, amount):
         alt = self.splitPair(pair)[1]

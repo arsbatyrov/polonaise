@@ -33,6 +33,9 @@ class Ranking(object):
             hBid = float(pairdata.get("highestBid"))
             volume = float(pairdata.get("baseVolume"))
             rank = ((lAsk - hBid) / hBid) * volume
+            # remove Alt from top if cheaper than min value (100 satoshi by default)
+            if hBid < api.MIN_VALUE:
+                rank = 0
             # append a value to dictionary
             self.ranking[pair] = rank
         # declare a sorted dict for export

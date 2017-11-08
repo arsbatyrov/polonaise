@@ -13,7 +13,19 @@ class Database(object):
 
     def getLastPrice(self, pair):
         db.execute("SELECT PRICE FROM lastPrice WHERE PAIR = ?", (pair,))
-        results = db.fetchone()
-        if results is None:
+        value = db.fetchone()
+        if value is None:
             results = 0.01
+        else:
+            results = value[0]
         return results
+
+    def getLastTime(self, pair):
+        db.execute("SELECT TIME FROM lastPrice WHERE PAIR = ?", (pair,))
+        value = db.fetchone()
+        if value is None:
+            results = 0
+        else:
+            results = value[0]
+        return results
+
