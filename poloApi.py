@@ -14,7 +14,7 @@ class PoloApi(object):
     polo.key = 'GHX32OJP-DGCFJKCS-LACQJUJ5-25D2KK0R'
     polo.secret = 'd51d59524afdebe60c5d19df7cbdc592446ff15fabb97c4538165b051d14654828ae670e5c6f21dd0ea1cc94a444bf2a9ac2a82138021f2f83e16abd6408c0f7'
 
-    MIN_AMOUNT = 0.00015
+    MIN_AMOUNT = 0.00011
     MIN_ORDER = 0.0002
     FEE = 0.0025
     MIN_PROFIT = 1

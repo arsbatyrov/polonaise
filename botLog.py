@@ -6,5 +6,6 @@ class BotLog(object):
         pass
 
     def log(self, message):
+        print(message)
         logging.info(message)
 
