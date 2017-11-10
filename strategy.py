@@ -3,18 +3,16 @@ from poloApi import PoloApi
 from datafiles import DataFiles
 from database import Database
 from botLog import BotLog
-from datetime import datetime
+import datetime
 api = PoloApi()
 data = DataFiles()
 db = Database()
+dt = datetime
 
 class Strategy(object):
     def __init__(self):
         self.output = BotLog()
         self.currentPrice = 0
-        # self.amount = 0
-        self.btcBalance = 1.00
-        self.altBalance = 0.00
 
     def isProfit(self, pair, lastPrice):
         # get highest bid on the pair minus 1 satoshi
@@ -29,21 +27,20 @@ class Strategy(object):
         profit = round(lAsk - lastPrice - btcfee, 8)
         # calculate profit percent: profit / price we bought it, multiplied by 100 to get percents
         profitPercent = int(round(profit / lastPrice, 2) * 100)
-        self.output.log("My lowest ask is " + str(lAsk) +
-                        "\nLast price was " + str(lastPrice) +
-                        "\nFee is " + str(format(btcfee, '.8f')) + " BTC")
-        self.output.log("Total profit is " + str(profit) + ", or " + str(profitPercent) + "%.")
+        self.output.log("Pair: " + pair + ". Profit is " + str(format(profit, '.8f')) + ", or " + str(profitPercent) + "%.")
         if profitPercent > api.MIN_PROFIT:
             self.currentPrice = lAsk
             self.amount = amount
             return True
         return False
 
-    def tick(self, pair, wait=10):
+    def tick(self, pair, wait=0):
         splitpair = api.splitPair(pair)
         # get balances on BTC and ALT
         btcBalance = round(float(api.getBTCBalance()), 8)
+        # self.output.log("BTC balance: " + str(btcBalance) + ".")
         altBalance = round(float(api.getAltBalance(splitpair)), 8)
+        # self.output.log("Alt balance: " + str(altBalance) + ".")
         # get minimum bid for this price: 0.0001 BTC / current alt price
         # calculations sample: if 1 ETH = 0.25 BTC, divide 0.0001/0.25, and get 0.0004
         minBid = api.MIN_AMOUNT / api.getHighestBid(pair)
@@ -55,17 +52,18 @@ class Strategy(object):
             if self.isProfit(pair, lastPrice):
                 # sell the coin for price and amount stated in isProfit function
                 self.sellAlt(pair, self.currentPrice, self.amount)
-                # print("amount 3 = " + str(self.amount))
             # if this coin has been bought more than loss_time (def 2 weeks) ago
-            # elif self.isTooLong(pair):
-            #     self.sellAlt(pair, self.currentPrice, self.amount)
+            elif self.isTooLong(pair):
+                self.sellAlt(pair, self.currentPrice, self.amount)
         # we don't have enough alt, so we are going to buy it, if we have enough BTC
         elif btcBalance > api.MIN_AMOUNT:
             # get ALT amount to buy for 0.0001 BTC
             minAmount = api.MIN_AMOUNT / api.getLowestAsk(pair)
-            # print(minAmount)
             # buy minimum amount of altcoin for lowest price
             self.buyAlt(pair, api.getLowestAsk(pair), minAmount)
+        else:
+            # Not enough bitcoins for bot to trade
+            self.output.log("\033[91m " + "NOT ENOUGH BTC" + "\033[0m")
         time.sleep(wait)
 
     def buyAlt(self, pair, price, amount):
@@ -76,11 +74,10 @@ class Strategy(object):
 
     def isTooLong(self, pair):
         lastTime = db.getLastTime(pair)
-        print(lastTime)
-        timestamp = datetime.today()
-        loss_time = api.LOSS_TIME * 86400
-        if timestamp - lastTime > loss_time:
-            print("loss time activated")
+        timestamp = dt.datetime.today()
+        loss_time = dt.timedelta(api.LOSS_TIME * 86400)
+        if (timestamp - lastTime) > loss_time:
+            self.output.log("Pair " + pair + " is sold on loss time")
             return True
         return False
 

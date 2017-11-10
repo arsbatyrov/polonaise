@@ -1,10 +1,13 @@
 import re
 import json
+import configparser
 from datetime import datetime
 from poloniex import Poloniex
 from datafiles import DataFiles
 from database import Database
 from botLog import BotLog
+
+config = configparser.ConfigParser()
 polo = Poloniex()
 file = DataFiles()
 db = Database()
@@ -14,23 +17,28 @@ class PoloApi(object):
     polo.key = 'GHX32OJP-DGCFJKCS-LACQJUJ5-25D2KK0R'
     polo.secret = 'd51d59524afdebe60c5d19df7cbdc592446ff15fabb97c4538165b051d14654828ae670e5c6f21dd0ea1cc94a444bf2a9ac2a82138021f2f83e16abd6408c0f7'
 
-    MIN_AMOUNT = 0.00011
-    MIN_ORDER = 0.0002
-    FEE = 0.0025
-    MIN_PROFIT = 1
-    MIN_VALUE = 0.000001
-    LOSS_TIME = 14
+    def __init__(self):
+        config.read("files/config.ini")
+        self.MIN_AMOUNT = float(config.get("Poloniex", "MIN_AMOUNT"))
+        self.FEE = float(config.get("Poloniex", "FEE"))
+        self.MIN_PROFIT = int(config.get("Poloniex", "MIN_PROFIT"))
+        self.MIN_VALUE = float(config.get("Poloniex", "MIN_VALUE"))
+        self.LOSS_TIME = int(config.get("Poloniex", "LOSS_TIME"))
 
     def buy(self, pair, rate, amount):
+        amount = str(format(round(amount, 8), ".8f"))
         alt = self.splitPair(pair)[1]
+        rate = str(format(rate, ".8f"))
         timestamp = str(datetime.today())
-        output.log("I will buy the " + str(format(round(amount, 8), ".8f")) + " " + alt + " by the price of " + str(format(rate, ".8f")) + " BTC for 1 " + alt)
+        output.log("\033[91m" + "BOUGHT " + amount + " " + alt + " by the price of " + rate + " BTC for 1 " + alt +"\033[0m")
         db.writePrice(pair, timestamp, rate)
         polo.buy(pair, rate, amount)
 
     def sell(self, pair, rate, amount):
+        amount = str(format(round(amount, 8), ".8f"))
         alt = self.splitPair(pair)[1]
-        output.log("I will sell the " + str(format(round(amount, 8), ".8f")) + " " + alt + " by the price of " + str(format(rate, ".8f")) + " BTC for 1 " + alt)
+        rate = str(format(rate, ".8f"))
+        output.log("\033[92m" + "SOLD " + amount + " " + alt + " by the price of " + rate + " BTC for 1 " + alt + "\033[0m")
         polo.sell(pair, rate, amount)
 
     def values(self):
@@ -103,6 +111,3 @@ class PoloApi(object):
                     # polo.moveOrder(orderNum, price)
                     output.log("Old order " + orderNum + " was moved to price " + str(format(price, '.8f')) + " for one " + key + ".")
         output.log("All old orders were closed.")
-
-
-
