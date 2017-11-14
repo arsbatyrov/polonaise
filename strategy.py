@@ -34,6 +34,29 @@ class Strategy(object):
             return True
         return False
 
+    def profitSell(self):
+        mycoins = api.getNotNullBalances()
+        for k, v in mycoins.items():
+            altName = k
+            altBalance = float(v)
+            pair = api.mergePair(altName)
+            # get minimum bid for this price: 0.0001 BTC / current alt price
+            # calculations sample: if 1 ETH = 0.25 BTC, divide 0.0001/0.25, and get 0.0004
+            minBid = api.MIN_AMOUNT / api.getHighestBid(pair)
+            # get last price we bough the Alt at from database
+            lastPrice = db.getLastPrice(pair)
+            # if we have enough altcoins to place a minimum bid sell order
+            if altBalance > minBid:
+                # if we sell with profit comparing to the previous price
+                if self.isProfit(pair, lastPrice):
+                    # sell the coin for price and amount stated in isProfit function
+                    self.sellAlt(pair, self.currentPrice, self.amount)
+                # if this coin has been bought more than loss_time (def 2 weeks) ago
+                elif self.isTooLong(pair):
+                    self.sellAlt(pair, self.currentPrice, self.amount)
+
+
+
     def tick(self, pair, wait=0):
         splitpair = api.splitPair(pair)
         # get balances on BTC and ALT

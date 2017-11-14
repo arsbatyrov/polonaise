@@ -80,6 +80,12 @@ class PoloApi(object):
         altBalance = allBalances[splitPair[1]]
         return altBalance
 
+    def getNotNullBalances(self):
+        allbalances = self.getAllBalances()
+        balances = dict((k, v) for k, v in allbalances.items() if v != '0.00000000')
+        balances.pop('BTC')
+        return balances
+
     def getChart(self, pair, period, start, end):
         data = polo.returnChartData(pair, period, start, end)
         return data
@@ -92,6 +98,10 @@ class PoloApi(object):
     def splitPair(self, pair):
         splitPair = re.split(r"_", pair,)
         return splitPair
+
+    def mergePair(self, alt):
+        mergePair = "BTC_" + alt
+        return mergePair
 
     def getOrders(self):
         array = polo.returnOpenOrders('all')
@@ -108,6 +118,6 @@ class PoloApi(object):
                 for value in data[key]:
                     orderNum = (value['orderNumber'])
                     price = self.getHighestBid(key)
-                    # polo.moveOrder(orderNum, price)
+                    polo.moveOrder(orderNum, price)
                     output.log("Old order " + orderNum + " was moved to price " + str(format(price, '.8f')) + " for one " + key + ".")
         output.log("All old orders were closed.")
