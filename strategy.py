@@ -53,7 +53,7 @@ class Strategy(object):
                     self.sellAlt(pair, self.currentPrice, self.amount)
                 # if this coin has been bought more than loss_time (def 2 weeks) ago
                 elif self.isTooLong(pair):
-                    self.sellAlt(pair, self.currentPrice, self.amount)
+                    self.sellAlt(pair, self.currentPrice, altBalance)
 
 
 
