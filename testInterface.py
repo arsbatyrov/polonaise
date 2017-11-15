@@ -14,5 +14,4 @@ class TestInterface(object):
     def __init__(self):
         pass
 
-
     strategy.profitSell()
