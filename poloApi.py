@@ -118,6 +118,12 @@ class PoloApi(object):
                 for value in data[key]:
                     orderNum = (value['orderNumber'])
                     price = self.getHighestBid(key)
-                    polo.moveOrder(orderNum, price)
-                    output.log("Old order " + orderNum + " was moved to price " + str(format(price, '.8f')) + " for one " + key + ".")
+                    try:
+                        polo.moveOrder(orderNum, price)
+                        output.log("Old order " + orderNum + " was moved to price " + str(
+                            format(price, '.8f')) + " for one " + key + ".")
+                        break
+                    except:
+                        polo.cancelOrder(orderNum)
+                        output.log("Old order " + orderNum + " was cancelled as all " + key + "s cost less than min bid.")
         output.log("All old orders were closed.")

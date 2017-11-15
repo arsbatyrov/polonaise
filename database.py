@@ -25,7 +25,7 @@ class Database(object):
         db.execute("SELECT DATE FROM lastPrice WHERE PAIR = ?", (pair,))
         value = db.fetchone()
         if value is None:
-            results = 0
+            results = datetime.fromtimestamp(int("0"))
         else:
             results = datetime.strptime(value[0],'%Y-%m-%d %H:%M:%S.%f')
         return results
