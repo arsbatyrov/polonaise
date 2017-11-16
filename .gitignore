@@ -2,4 +2,4 @@
 __pycache__/
 prices/
 *.log
-
+.DS_Store
