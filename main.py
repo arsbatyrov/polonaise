@@ -11,7 +11,8 @@ rank = Ranking()
 def main(argv):
     trade_pairs = 10
     api.closeOldOrders()
-    toppairs = rank.getRankedPairsList()
+    rankedpairs = rank.getRankedPairsList()
+    toppairs = rankedpairs[:trade_pairs]
     strategy.profitSell()
     pairs = [x for x in toppairs if x not in strategy.deletePairs]
     for i in range(0, trade_pairs):
