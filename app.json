@@ -1,0 +1,14 @@
+{
+  "name": "Polonaise bot",
+  "description": "Poloniex trading bot.",
+  "image": "heroku/python",
+  "repository": "https://github.com/comolder/polonaise",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ],
+  "environments": {
+    "test": {
+      "scripts": {
+      }
+    }
+  }
+}

@@ -14,8 +14,8 @@ db = Database()
 output = BotLog()
 
 class PoloApi(object):
-    polo.key = 'GHX32OJP-DGCFJKCS-LACQJUJ5-25D2KK0R'
-    polo.secret = 'd51d59524afdebe60c5d19df7cbdc592446ff15fabb97c4538165b051d14654828ae670e5c6f21dd0ea1cc94a444bf2a9ac2a82138021f2f83e16abd6408c0f7'
+    polo.key = 'RCYJNZXW-XAM80MW5-MPTPT8AA-B06W3RNL'
+    polo.secret = '6760483efec905a34535ed0a615e2c220ae612b7057de3ba02baa57051c9c856182676ca149d3060a4fbc89d7523b148cb7d5430c041819ae55aa88fb8c64717'
 
     def __init__(self):
         config.read("files/config.ini")

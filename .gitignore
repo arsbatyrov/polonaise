@@ -3,3 +3,6 @@ __pycache__/
 prices/
 *.log
 .DS_Store
+venv/ 
+TIMES=2
+.env 
