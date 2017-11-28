@@ -28,7 +28,7 @@ class Strategy(object):
         profit = round(lAsk - lastPrice - btcfee, 8)
         # calculate profit percent: profit / price we bought it, multiplied by 100 to get percents
         profitPercent = int(round(profit / lastPrice, 2) * 100)
-        self.output.log("Pair: " + pair + ". Profit is " + str(format(profit, '.8f')) + ", or " + str(profitPercent) + "%.")
+        # self.output.log("Pair: " + pair + ". Profit is " + str(format(profit, '.8f')) + ", or " + str(profitPercent) + "%.")
         self.currentPrice = lAsk
         self.amount = amount
         if profitPercent > api.MIN_PROFIT:
